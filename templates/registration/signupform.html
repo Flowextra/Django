@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form method="POST" action="{% url 'signup' %}" class="justify-content-center container">
+        <h2>SignUp</h2>
+        <br>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="save btn btn-secondary" value="SignUp">
+    </form>
+    <br>
+    <br>
+{% endblock %}

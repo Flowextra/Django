@@ -1,0 +1,49 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="container">
+
+        {% if post.published_date %}
+            <div class="date">
+                Published On : {{ post.published_date }}
+                <br>
+                <br>
+            </div>
+        {% elif user.is_authenticated and user == post.author %}
+            <a class="btn btn-success" href="{% url 'post_publish' pk=post.pk %}">Publish Blog</a>&nbsp;&nbsp;
+        {% endif %}
+        
+        {% if user.is_authenticated and user == post.author %}
+        <a class="btn btn-warning" href="{% url 'post_edit' pk=post.pk %}">Edit</span></a>&nbsp;&nbsp;
+        <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}">Delete</span></a>
+        {% endif %}
+        <br>
+        <br>
+        <h2>{{ post.title }}</h2>
+        <p style="text-align: justify;">{{ post.text }}</p>
+    </div>
+
+    <hr>
+    <br>
+    <div class="container">
+    <a class="btn btn-secondary" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+        {% for comment in post.comments.all %}
+            {% if user.is_authenticated or comment.approved_comment %}
+            <div class="comment">
+                <div>
+                    {{ comment.created_date }}
+                    {% if not comment.approved_comment %}
+                        <a class="btn btn-success" href="{% url 'comment_approve' pk=comment.pk %}">Approve</a>
+                        <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">Delete</a>
+                    {% endif %}
+                </div>
+                <strong>{{ comment.author }}</strong>
+                <p>{{ comment.text }}</p>
+            </div>
+            {% endif %}
+            {% empty %}
+            <p><strong>No comments here yet :(</strong></p>
+        {% endfor %}
+    </div>
+
+{% endblock %}
